@@ -16,7 +16,7 @@
 
     "silex/silex": "~2.2",
     "symfony/console": "~3.3",
-    "doctrine/dbal": "~2.6",
+    "doctrine/dbal": "2.5.*",
     "twig/twig": "~1.34",
     "symfony/twig-bridge": "~3.3",
     "monolog/monolog": "~1.23",
