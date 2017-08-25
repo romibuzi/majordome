@@ -1,0 +1,55 @@
+<?php
+
+$rootDir = dirname(__DIR__);
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Private Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This is the private configuration, which will guarantee that Majordome runs fine
+    | You should not edit it
+    */
+    'debug'           => false,
+
+    'name'            => 'Majordome',
+    'version'         => 'n/a',
+    'root.dir'        => $rootDir,
+    'db.path'         => $rootDir . '/var/majordome.db',
+    'db_test.path'    => $rootDir . '/var/majordome_test.db',
+    'monolog.name'    => 'majordome',
+    'monolog.level'   => Monolog\Logger::INFO,
+    'monolog.logfile' => $rootDir . '/var/logs/app.log',
+    'views.path'      => $rootDir . '/src/views',
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Configuration
+    |--------------------------------------------------------------------------
+    */
+    // The AWS region where you want Majordome work (us-east-1, eu-west-1, us-west-2, ...)
+    'aws.region' => '',
+
+    // The AWS Account Id you want to analyze
+    'aws.accountId' => '',
+
+    // The Rules you want to apply
+    'aws.rules' => [
+        'DetachedEBS'                 => true, // Detect EBS Volume not attached to any EC2 instance
+        'ELBWithoutMultipleInstances' => true, // Detect ELB with 0 or only 1 EC2 instance attached to them
+        'UnusedAMI'                   => true, // Detect AMI not used by any EC2 instance
+        'UnusedElasticIP'             => true, // Detect Elastic IP not attached to any EC2 instance
+        'UnusedSecurityGroup'         => true, // Detect Security Group unused by any EC2 instance
+        'UnusedSnapshot'              => true  // Detect Snapshot of EBS Volume that don't or no more exists
+    ],
+
+    // Configuration for the email reporting
+    'report.email_configuration' => [
+        'host' => 'localhost',
+        'port' => 25,
+        'username' => '',
+        'password' => '',
+    ],
+    'report.sender_adress' => ''
+];

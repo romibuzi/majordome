@@ -1,0 +1,12 @@
+bin/
+vendor/
+
+# local specific config
+app/config.php
+
+var/majordome.db
+
+var/logs/*
+!var/logs/.gitkeep
+
+var/code-coverage

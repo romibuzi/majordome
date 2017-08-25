@@ -1,0 +1,31 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    {{ parent() }}
+    <h2>List of last runs :</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Number of Violations detected</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in runs %}
+                <tr>
+                    <th scope="row">{{ run.id }}</th>
+                    <td>{{ run.createdAt|date("F jS \\a\\t g:ia") }}</td>
+                    <td>{{ run.violationsCount }}</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm"
+                           href="{{ url('run_details', {'id': run.id}) }}">
+                            View Run Details
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,33 @@
+<h3>Run {{ run.id }}</h3>
+<p>Date : {{ run.createdAt|date("F jS \\a\\t g:ia") }}</p>
+
+{% if violationsByRule|length > 0 %}
+    <h4>List of violations by rule</h4>
+    <table class="table table-bordered">
+        <tbody>
+        {% for rule in violationsByRule %}
+            <tr data-href="#{{ rule.name }}">
+                <td>{{ rule.name }} ({{ rule.violations|length }} violations)</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <h4>No violations were detected</h4>
+{% endif %}
+
+<hr>
+
+{% for rule in violationsByRule %}
+    <div id="{{ rule.name }}" class="rules">
+        <h4>{{ rule.name }}</h4>
+        <h5>{{ rule.description }}</h5>
+        <table class="table">
+            <tbody>
+            {% for resource in rule.violations %}
+                <tr><td><a href="{{ resource.url }}" target="_blank">{{ resource.id }}</a></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endfor %}

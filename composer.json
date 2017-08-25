@@ -1,0 +1,45 @@
+{
+  "name": "romibuzi/majordome",
+  "type": "project",
+  "description": "A tool scanning your AWS cloud looking for unused resources to clean up",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Romain Ardiet",
+      "email": "romain.ardiet@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.6",
+    "ext-curl": "*",
+    "ext-sqlite3": "*",
+
+    "silex/silex": "~2.2",
+    "symfony/console": "~3.3",
+    "doctrine/dbal": "~2.6",
+    "twig/twig": "~1.34",
+    "symfony/twig-bridge": "~3.3",
+    "monolog/monolog": "~1.23",
+    "swiftmailer/swiftmailer": "~5.4",
+
+    "aws/aws-sdk-php": "~3.34"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~5.7",
+    "symfony/browser-kit": "~3.3",
+    "squizlabs/php_codesniffer": "~3.0"
+  },
+  "config": {
+    "bin-dir": "bin/"
+  },
+  "autoload": {
+    "psr-4": {
+      "Majordome\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Majordome\\Tests\\": "tests/"
+    }
+  }
+}

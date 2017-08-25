@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ruleset name="majordome">
+    <description>The coding standard for majordome</description>
+
+    <file>src</file>
+    <file>tests</file>
+
+    <arg name="colors" />
+    <arg value="np"/>
+
+    <rule ref="PSR2"/>
+</ruleset>
