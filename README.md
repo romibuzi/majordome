@@ -40,9 +40,9 @@ aws_access_key_id = '...'
 aws_secret_access_key = '...'
 ```
 
-Finally, you have to copy [config.php.dist](app/config.php.dist) in `app/config.php` and edit following settings : `aws.region`, `aws.accountId` and `report` section for email reporting.
+Finally, you have to copy [config.php.dist](app/config.php.dist) to `app/config.php` and edit following settings : `aws.region`, `aws.accountId` and `report` section for email reporting. accountId should not contain `-`.
 
-You can also specify which rule to enable or disable under the `aws.rules` key
+You can also specify which rule to enable or disable under the `aws.rules` key in the app/config.php.
 
 ### Install and Run Majordome
 
