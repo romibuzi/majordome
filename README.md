@@ -15,8 +15,7 @@ This is an overview of what Majordome can detect with existing rules :
 - Detect a Snapshot of a EBS Volume that doesn't or no more exists
 - Detect a Unused [Elastic IP](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html)
 - Detect a Unused [Security Group](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html)
-- Detect a LoadBalancer without
-EC2 instances attached behind it
+- Detect a LoadBalancer without EC2 instances attached behind it
 
 ### Prerequisites
 
@@ -40,9 +39,9 @@ aws_access_key_id = '...'
 aws_secret_access_key = '...'
 ```
 
-Finally, you have to copy [config.php.dist](app/config.php.dist) to `app/config.php` and edit following settings : `aws.region`, `aws.accountId` and `report` section for email reporting. accountId must not have  `-` ex:`63383838383`, so get rid of them from your typical accountId format.
+Finally, you have to copy `app/config.php.dist` to `app/config.php` and edit following settings : `aws.region`, `aws.accountId` and `report` section for email reporting. accountId must not have  `-` ex:`63383838383`, so get rid of them from your typical accountId format.
 
-You can also specify which rule to enable or disable under the `aws.rules` key in the app/config.php.
+You can also specify which rule to enable or disable under the `aws.rules` key in `app/config.php`.
 
 ### Install and Run Majordome
 
@@ -53,12 +52,12 @@ $ make run
 
 This will run the Majordome process, which will crawl different AWS resources and run each of them against the rule engine to decide if the resource is valid or not.
 
-Majordome will save the run and its `violations` (a violation is when a resource is identified as invalid by a rule) under a small sqlite database.
+Majordome will save the run and its `violations` (a violation is when a resource is identified as invalid by a rule) under a sqlite database.
 
-*Note* : To be efficient, Majordome should have extensible **read** access to different AWS resources, as EC2 instances, security groups, Snapshots,
-Volumes, Elastic Load Balancers and so on...
+*Note* : To be efficient, Majordome should have extensible **read** access to different AWS resources like EC2 instances, security groups, Snapshots,
+Volumes and Elastic Load Balancers
 
-As for now with existing rules, this is the minimum what Majordome should have access to be working :
+This is the policies Majordome should have :
 ```json
 {
    "Version": "2012-10-17",
@@ -90,9 +89,13 @@ $ make run-web
 
 The interface will be available at [http://localhost:8080](http://localhost:8080). It will display the list of Majordome runs and display details and associated violations for each of them like below :
 
-![Majordome_ui](img/majordome_ui.png)
+<p align="center">
+  <img width="500" src="img/majordome_ui.png">
+</p>
 
-![Majordome_ui2](img/majordome_ui2.png)
+<p align="center">
+  <img width="500" src="img/majordome_ui2.png">
+</p>
 
 ### Run tests
 
@@ -106,7 +109,7 @@ $ make test
 #### I want to implement a new rule, is it possible ?
 
 Yes ! The core of Majordome was designed for extensibility. There is a [RuleInterface](src/Rule/RuleInterface.php) which each rule should implements,
-you can get a look to existing rules [here](src/Rule/AWS).
+you can get a look to existing [rules](src/Rule/AWS).
 
 ### License
 
