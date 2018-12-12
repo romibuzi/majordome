@@ -54,10 +54,10 @@ This will run the Majordome process, which will crawl different AWS resources an
 
 Majordome will save the run and its `violations` (a violation is when a resource is identified as invalid by a rule) under a sqlite database.
 
-*Note* : To be efficient, Majordome should have extensible **read** access to different AWS resources, as EC2 instances, security groups, Snapshots,
+*Note* : To be efficient, Majordome should have extensible **read** access to different AWS resources like EC2 instances, security groups, Snapshots,
 Volumes and Elastic Load Balancers
 
-This is the rules Majordome should have :
+This is the policies Majordome should have :
 ```json
 {
    "Version": "2012-10-17",
