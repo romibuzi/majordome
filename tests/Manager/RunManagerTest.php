@@ -4,18 +4,22 @@ namespace Majordome\Tests\Manager;
 
 use Majordome\Manager\RunManager;
 use Majordome\Resource\AWSResourceType;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
-class RunManagerTest extends \PHPUnit_Framework_TestCase
+class RunManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var \Doctrine\DBAL\Connection|ObjectProphecy */
     private $connection;
 
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->connection = $this->prophesize('Doctrine\DBAL\Connection');
     }
@@ -28,7 +32,7 @@ class RunManagerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->connection
-            ->fetchAll(Argument::containingString('SELECT r.*'))
+            ->fetchAllAssociative(Argument::containingString('SELECT r.*'))
             ->WillReturn($runs)
             ->shouldBeCalled();
 
@@ -43,7 +47,7 @@ class RunManagerTest extends \PHPUnit_Framework_TestCase
         $run = ['id' => 1, 'createdAt' => '2016-09-21 10:00:00'];
 
         $this->connection
-            ->fetchAssoc(Argument::containingString('SELECT r.*'))
+            ->fetchAssociative(Argument::containingString('SELECT r.*'))
             ->WillReturn($run)
             ->shouldBeCalled();
 
@@ -75,13 +79,13 @@ class RunManagerTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $this->connection->fetchAssoc(
+        $this->connection->fetchAssociative(
             Argument::containingString('SELECT * FROM runs WHERE id = ?'),
             Argument::containing($runId),
             Argument::containing(\PDO::PARAM_INT)
         )->WillReturn($runExpected)->shouldBeCalled();
 
-        $this->connection->fetchAll(
+        $this->connection->fetchAllAssociative(
             Argument::type('string'),
             Argument::containing($runId),
             Argument::containing(\PDO::PARAM_INT)
@@ -102,7 +106,7 @@ class RunManagerTest extends \PHPUnit_Framework_TestCase
     {
         $runId = 1563;
 
-        $this->connection->fetchAssoc(
+        $this->connection->fetchAssociative(
             Argument::containingString('SELECT * FROM runs WHERE id = ?'),
             Argument::containing($runId),
             Argument::containing(\PDO::PARAM_INT)

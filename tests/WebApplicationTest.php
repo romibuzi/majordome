@@ -2,9 +2,10 @@
 
 namespace Majordome\Tests;
 
-use Symfony\Component\HttpKernel\Client;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
-class WebApplicationTest extends \PHPUnit_Framework_TestCase
+class WebApplicationTest extends TestCase
 {
     /** @var \Silex\Application|null */
     private static $app = null;
@@ -12,7 +13,7 @@ class WebApplicationTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritDoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // some part of the application will be bootstraped differently with env set at 'test'
         // see app/app.php for details
@@ -33,7 +34,7 @@ class WebApplicationTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritDoc}
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (null !== self::$app) {
             // Destroy the test database
@@ -53,15 +54,15 @@ class WebApplicationTest extends \PHPUnit_Framework_TestCase
 
         $pageContent = $client->getResponse()->getContent();
 
-        $this->assertContains('List of last runs', $pageContent);
-        $this->assertContains('<table', $pageContent);
+        $this->assertStringContainsString('List of last runs', $pageContent);
+        $this->assertStringContainsString('<table', $pageContent);
 
         // The table shoud contains the run inserted
         $list = $crawler->filterXPath('//table/tbody/tr');
         $this->assertSame(1, $list->count());
 
         $runLink = $list->first()->selectLink('View Run')->link()->getUri();
-        $this->assertContains("/run/$runId", $runLink);
+        $this->assertStringContainsString("/run/$runId", $runLink);
     }
 
     public function testRunDetailsPage()
@@ -73,7 +74,7 @@ class WebApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($client->getResponse()->isOk());
 
         $pageContent = $client->getResponse()->getContent();
-        $this->assertContains("Run $runId", $pageContent);
+        $this->assertStringContainsString("Run $runId", $pageContent);
     }
 
     public function testNotFoundRun()
@@ -89,7 +90,7 @@ class WebApplicationTest extends \PHPUnit_Framework_TestCase
     {
         static $client = null;
         if (null === $client) {
-            $client = new Client(self::$app);
+            $client = new HttpKernelBrowser(self::$app);
         }
 
         return $client;

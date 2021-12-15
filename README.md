@@ -19,7 +19,7 @@ This is an overview of what Majordome can detect with existing rules :
 
 ### Prerequisites
 
-- PHP 5.6 or 7+ with curl and sqlite3 extensions
+- PHP 7+ with curl and sqlite3 extensions
 - Sqlite3
 - [Composer](https://getcomposer.org/)
 - AWS credentials (see below)

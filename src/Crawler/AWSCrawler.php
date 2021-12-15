@@ -2,6 +2,7 @@
 
 namespace Majordome\Crawler;
 
+use Aws\Sdk;
 use Majordome\Resource\AWSResourceType;
 use Majordome\Resource\Resource;
 use Majordome\Resource\ResourceInterface;
@@ -13,7 +14,7 @@ class AWSCrawler
     private $rdsClient;
     private $elasticacheClient;
 
-    public function __construct(\Aws\Sdk $awsSdk)
+    public function __construct(Sdk $awsSdk)
     {
         $this->ec2Client = $awsSdk->createEc2();
         $this->elbClient = $awsSdk->createElasticLoadBalancing();
@@ -106,7 +107,7 @@ class AWSCrawler
                 }
             }
         }
-        
+
         return $ec2SecurityGroups;
     }
 

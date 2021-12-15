@@ -3,10 +3,14 @@
 namespace Majordome\Tests\Crawler;
 
 use Majordome\Crawler\AWSCrawler;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
-class AWSCrawlerTest extends \PHPUnit_Framework_TestCase
+class AWSCrawlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var \Aws\Sdk|ObjectProphecy */
     private $awsSdk;
     /** @var \Aws\Ec2\Ec2Client|ObjectProphecy */
@@ -15,7 +19,7 @@ class AWSCrawlerTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->awsSdk    = $this->prophesize('Aws\Sdk');
         $this->ec2Client = $this->prophesize('Aws\Ec2\Ec2Client');

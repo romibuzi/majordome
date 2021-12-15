@@ -4,13 +4,16 @@ namespace Majordome\Tests\Rule\AWS;
 
 use Majordome\Rule\AWS\DetachedEBSVolume;
 use Majordome\Tests\Rule\AbstractRuleTest;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class DetachedEBSVolumeTest extends AbstractRuleTest
 {
+    use ProphecyTrait;
+
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->rule = new DetachedEBSVolume();
     }

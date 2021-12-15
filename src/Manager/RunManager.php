@@ -2,6 +2,7 @@
 
 namespace Majordome\Manager;
 
+use Doctrine\DBAL\Connection;
 use Majordome\Resource\Resource;
 use Majordome\Resource\ResourceUrlGeneratorInterface;
 
@@ -11,7 +12,7 @@ class RunManager
     private $resourceUrlGenerator;
 
     public function __construct(
-        \Doctrine\DBAL\Connection $connection,
+        Connection $connection,
         ResourceUrlGeneratorInterface $resourceUrlGenerator = null
     ) {
         $this->connection = $connection;
@@ -36,10 +37,10 @@ class RunManager
         );
 
         if ($limit === 1) {
-            return $this->connection->fetchAssoc($query);
+            return $this->connection->fetchAssociative($query);
         }
 
-        return $this->connection->fetchAll($query);
+        return $this->connection->fetchAllAssociative($query);
     }
 
     /**
@@ -49,13 +50,13 @@ class RunManager
      */
     public function getRunDetails($runId)
     {
-        $run = $this->connection->fetchAssoc("SELECT * FROM runs WHERE id = ?", [$runId], [\PDO::PARAM_INT]);
+        $run = $this->connection->fetchAssociative("SELECT * FROM runs WHERE id = ?", [$runId], [\PDO::PARAM_INT]);
 
         if (!$run) {
             return [false, false];
         }
 
-        $violations = $this->connection->fetchAll(
+        $violations = $this->connection->fetchAllAssociative(
             "SELECT
                v.resource_id,
                v.resource_type,

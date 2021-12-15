@@ -4,9 +4,12 @@ namespace Majordome\Tests\Rule\AWS;
 
 use Majordome\Rule\AWS\UnusedSecurityGroup;
 use Majordome\Tests\Rule\AbstractRuleTest;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class UnusedSecurityGroupTest extends AbstractRuleTest
 {
+    use ProphecyTrait;
+
     private static $ec2SecurityGroups = [
         'sg-AAAAAAAAA',
         'sg-BBBBBBBBB',
@@ -16,7 +19,7 @@ class UnusedSecurityGroupTest extends AbstractRuleTest
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->rule = new UnusedSecurityGroup(self::$ec2SecurityGroups);
     }

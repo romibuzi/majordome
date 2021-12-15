@@ -3,9 +3,13 @@
 namespace Majordome\Tests\Rule;
 
 use Majordome\Rule\BasicRuleEngine;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
-class BasicRuleEngineTest extends \PHPUnit_Framework_TestCase
+class BasicRuleEngineTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testAddRules()
     {
         $rule1 = $this->prophesize();

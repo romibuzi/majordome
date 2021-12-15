@@ -5,9 +5,13 @@ namespace Majordome\Tests\Resource;
 use Majordome\Resource\AWSResourceType;
 use Majordome\Resource\AWSResourceUrlGenerator;
 use Majordome\Resource\ResourceUrlGeneratorInterface;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
-class AWSResourceUrlGeneratorTest extends \PHPUnit_Framework_TestCase
+class AWSResourceUrlGeneratorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var ResourceUrlGeneratorInterface */
     private $generator;
 
@@ -16,7 +20,7 @@ class AWSResourceUrlGeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generator = new AWSResourceUrlGenerator(self::$awsRegion);
     }
@@ -37,12 +41,12 @@ class AWSResourceUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->generator->generateUrl($resource->reveal());
 
-        $this->assertInternalType('string', $result);
-        $this->assertContains(AWSResourceUrlGenerator::WEB_CONSOLE_URL, $result);
+        $this->assertIsString($result);
+        $this->assertStringContainsString(AWSResourceUrlGenerator::WEB_CONSOLE_URL, $result);
 
         if ($type !== 'unknown') {
-            $this->assertContains(self::$awsRegion, $result);
-            $this->assertContains($id, $result);
+            $this->assertStringContainsString(self::$awsRegion, $result);
+            $this->assertStringContainsString($id, $result);
 
             $resource->getId()->shouldHaveBeenCalled();
         }

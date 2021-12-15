@@ -4,8 +4,9 @@ namespace Majordome\Tests\Resource;
 
 use Majordome\Resource\AWSResourceType;
 use Majordome\Resource\Resource;
+use PHPUnit\Framework\TestCase;
 
-class ResourceTest extends \PHPUnit_Framework_TestCase
+class ResourceTest extends TestCase
 {
     /**
      * @dataProvider resourcesProvider

@@ -4,9 +4,12 @@ namespace Majordome\Tests\Rule\AWS;
 
 use Majordome\Rule\AWS\UnusedAMI;
 use Majordome\Tests\Rule\AbstractRuleTest;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class UnusedAMITest extends AbstractRuleTest
 {
+    use ProphecyTrait;
+
     private static $ec2AMIs = [
         'iam.ec2.ami1',
         'iam.ec2.ami2',
@@ -16,7 +19,7 @@ class UnusedAMITest extends AbstractRuleTest
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->rule = new UnusedAMI(self::$ec2AMIs);
     }

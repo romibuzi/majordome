@@ -4,9 +4,12 @@ namespace Majordome\Tests\Rule\AWS;
 
 use Majordome\Rule\AWS\UnusedSnapchot;
 use Majordome\Tests\Rule\AbstractRuleTest;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class UnusedSnapchotTest extends AbstractRuleTest
 {
+    use ProphecyTrait;
+
     private static $ebsVolumes = [
         'vol-AAAAAAAAAA',
         'vol-BBBBBBBBBB',
@@ -20,7 +23,7 @@ class UnusedSnapchotTest extends AbstractRuleTest
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->rule = new UnusedSnapchot(self::$ebsVolumes, self::$AMIs);
     }

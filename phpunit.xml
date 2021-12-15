@@ -10,7 +10,7 @@
         convertWarningsToExceptions = "true"
         processIsolation            = "false"
         stopOnFailure               = "false"
-        syntaxCheck                 = "false"
+        cacheResult                 = "false"
         bootstrap                   = "tests/bootstrap.php" >
 
     <testsuites>
@@ -19,18 +19,9 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory>src/</directory>
-        </whitelist>
-        <blacklist>
-            <directory>vendor/</directory>
-        </blacklist>
-    </filter>
-
-    <logging>
-        <log type="coverage-html" target="./var/code-coverage" charset="UTF-8"
-             yui="true" highlight="true"
-             lowUpperBound="50" highLowerBound="80"/>
-    </logging>
+    <coverage>
+        <report>
+            <html outputDirectory="./var/code-coverage" lowUpperBound="50" highLowerBound="80"/>
+        </report>
+    </coverage>
 </phpunit>
