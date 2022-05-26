@@ -125,7 +125,7 @@ class RunAWSCommand extends Command
         $rules = [];
         // Push rules (ids, names and descriptions) in database if not already done during a previous run
         foreach ($ruleEngine->getRules() as $rule) {
-            $id = $db->fetchColumn("SELECT id FROM rules WHERE name = ?", [$rule->getName()]);
+            $id = $db->fetchOne("SELECT id FROM rules WHERE name = ?", [$rule->getName()]);
             if (!$id) {
                 $db->insert('rules', [
                     'name' => $rule->getName(),
