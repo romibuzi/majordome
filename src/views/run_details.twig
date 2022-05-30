@@ -1,8 +1,10 @@
-<h3>Run {{ run.id }}</h3>
-<p>Date : {{ run.createdAt|date("F jS \\a\\t g:ia") }}</p>
+<div class="d-flex justify-content-between">
+    <div class="h2"><h2>Run {{ run.id }}</h2></div>
+    <div class="p-2"><p class="bg-dark text-light">{{ run.createdAt|date("j/m/Y, H:i \T") }}</p></div>
+</div>
 
 {% if violationsByRule|length > 0 %}
-    <h4>List of violations by rule</h4>
+    <h4>Violations by rule</h4>
     <table class="table table-bordered">
         <tbody>
         {% for rule in violationsByRule %}
@@ -21,11 +23,11 @@
 {% for rule in violationsByRule %}
     <div id="{{ rule.name }}" class="rules">
         <h4>{{ rule.name }}</h4>
-        <h5>{{ rule.description }}</h5>
+        <p>{{ rule.description }}</p>
         <table class="table">
             <tbody>
             {% for resource in rule.violations %}
-                <tr><td><a href="{{ resource.url }}" target="_blank">{{ resource.id }}</a></td></tr>
+                <tr><td class="card"><a class="stretched-link" href="{{ resource.url }}" target="_blank">{{ resource.id }}</a></td></tr>
             {% endfor %}
             </tbody>
         </table>

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     {% block head %}
         <title>Majordome</title>
     {% endblock %}
     <link rel="icon" href="{{ global.request.basepath }}/favicon.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ global.request.basepath }}/css/bootstrap.min.css">
@@ -15,25 +17,19 @@
 
 <body>
     <div class="container content">
-        <div class="col-sm-1"></div>
-        <div class="col-sm-10">
+        <div class="col-12">
             {% block content %}
                 <h1><a class="link-unstyled" href="{{ url('index') }}">Majordome</a></h1>
                 <hr>
             {% endblock %}
         </div>
-        <div class="col-sm-1"></div>
 
         <div class="push"></div>
     </div>
-    <footer class="footer">
-        <div class="container">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-11">
-                <p class="credit">
-                    Built with <i class="em em-heart"></i>
-                </p>
-            </div>
+
+    <footer class="bg-dark text-lg-start">
+        <div class="text-white p-3">
+            Built with <i class="em em-heart"></i>
         </div>
     </footer>
 

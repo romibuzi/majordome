@@ -93,10 +93,6 @@ The interface will be available at [http://localhost:8080](http://localhost:8080
   <img width="500" src="img/majordome_ui.png">
 </p>
 
-<p align="center">
-  <img width="500" src="img/majordome_ui2.png">
-</p>
-
 ### Run tests
 
 ```
