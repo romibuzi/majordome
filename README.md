@@ -90,7 +90,7 @@ $ make run-web
 The interface will be available at [http://localhost:8080](http://localhost:8080). It will display the list of Majordome runs and display details and associated violations for each of them like below :
 
 <p align="center">
-  <img width="500" src="img/majordome_ui.png">
+  <img width="500" src="majordome_ui.png">
 </p>
 
 ### Run tests
