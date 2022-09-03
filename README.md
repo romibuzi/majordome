@@ -28,7 +28,7 @@ This is an overview of what Majordome can detect with existing rules:
 - [Install and Run Majordome](#install-and-run-majordome)
   * [Manually](#manually)
     + [Prerequisites](#prerequisites)
-    + [Prerequisites](#run)
+    + [Run](#run)
     + [Run the web interface](#run-the-web-interface)
   * [Docker](#docker)
 - [Tests](#tests)
