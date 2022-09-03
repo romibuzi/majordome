@@ -27,26 +27,6 @@ if ($env === 'test') {
     $app['debug'] = true;
 }
 
-$dbPath = 'test' === $env ? $config['db_test.path'] : $config['db.path'];
-
-$app->register(new Silex\Provider\DoctrineServiceProvider(), [
-    'db.options' => [
-        'driver'   => 'pdo_sqlite',
-        'path'     => $dbPath,
-    ],
-]);
-
-if (!file_exists($dbPath)) {
-    $app['logger']->info("'$dbPath' doesnt exist, creating it with schema." . PHP_EOL);
-
-    $schema = file_get_contents(__DIR__ . '/schema.sql');
-    // split each CREATE TABLE queries and run them inside the database
-    $queries = explode(';', $schema);
-    foreach ($queries as $query) {
-        $app['db']->exec($query);
-    }
-}
-
 $app->register(new Silex\Provider\TwigServiceProvider(), [
     'twig.path' => $config['views.path'],
     'twig.options' => [
@@ -66,6 +46,27 @@ if ($app['debug'] && is_cli()) {
         $logger->pushHandler(new Monolog\Handler\StreamHandler(fopen('php://stdout', 'w')));
         return $logger;
     });
+}
+
+// DB config and setup
+$dbPath = 'test' === $env ? $config['db_test.path'] : $config['db.path'];
+
+$app->register(new Silex\Provider\DoctrineServiceProvider(), [
+    'db.options' => [
+        'driver'   => 'pdo_sqlite',
+        'path'     => $dbPath,
+    ],
+]);
+
+if (!file_exists($dbPath)) {
+    $app['logger']->info("'$dbPath' doesnt exist, creating it with schema." . PHP_EOL);
+
+    $schema = file_get_contents(__DIR__ . '/schema.sql');
+    // split each CREATE TABLE queries and run them inside the database
+    $queries = explode(';', $schema);
+    foreach ($queries as $query) {
+        $app['db']->exec($query);
+    }
 }
 
 // AWS Configuration
