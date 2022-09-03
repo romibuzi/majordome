@@ -1,15 +1,15 @@
-CREATE TABLE runs(
+CREATE TABLE IF NOT EXISTS runs(
   id          INTEGER PRIMARY KEY,
   createdAt   TEXT
 );
 
-CREATE TABLE rules(
+CREATE TABLE IF NOT EXISTS rules(
   id          INTEGER PRIMARY KEY,
   name        TEXT,
   description TEXT
 );
 
-CREATE TABLE violations(
+CREATE TABLE IF NOT EXISTS violations(
   id               INTEGER PRIMARY KEY,
   resource_id      TEXT,
   resource_type    TEXT,

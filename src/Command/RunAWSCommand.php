@@ -45,7 +45,7 @@ class RunAWSCommand extends Command
         $output->writeln('<info>Majordome is starting...</info>');
 
         $startTime = microtime(true);
-        $this->runMajordome();
+        $this->runMajordome($output);
         $endTime = microtime(true);
 
         $output->writeln('<info>Majordome run completed !</info>');
@@ -57,18 +57,18 @@ class RunAWSCommand extends Command
         ));
     }
 
-    private function runMajordome()
+    private function runMajordome(OutputInterface $output)
     {
         /** @var \Doctrine\DBAL\Connection $db */
         $db = $this->application['db'];
 
-        // Mark a new run
+        $output->writeln('Creating a new run');
         $db->insert('runs', [
             'createdAt' => (new \DateTime())->format('Y-m-d H:i:s')
         ]);
         $runId = $db->lastInsertId();
 
-        // Get data from different resources with AWS crawler
+        $output->writeln('Listing resources on AWS');
         $awsCrawler = new AWSCrawler($this->application['aws.sdk']);
 
         $ebsResources = $awsCrawler->getEBSResources();
@@ -91,9 +91,7 @@ class RunAWSCommand extends Command
             $awsCrawler->getELBResources()
         );
 
-        // Setup the rule engine based on user wanted configuration
         $ruleEngine = new BasicRuleEngine();
-
         $rulesConfig = $this->application['aws.rules'];
 
         if ($rulesConfig['DetachedEBS']) {
@@ -123,21 +121,24 @@ class RunAWSCommand extends Command
         }
 
         $rules = [];
-        // Push rules (ids, names and descriptions) in database if not already done during a previous run
+        // Push rules in database if not already done during a previous run
         foreach ($ruleEngine->getRules() as $rule) {
-            $id = $db->fetchOne("SELECT id FROM rules WHERE name = ?", [$rule->getName()]);
+            $ruleName = $rule->getName();
+            $id = $db->fetchOne("SELECT id FROM rules WHERE name = ?", [$ruleName]);
             if (!$id) {
                 $db->insert('rules', [
-                    'name' => $rule->getName(),
+                    'name' => $ruleName,
                     'description' => $rule->getDescription()
                 ]);
-                $rules[$rule->getName()] = $db->lastInsertId();
+                $rules[$ruleName] = $db->lastInsertId();
             } else {
-                $rules[$rule->getName()] = $id;
+                $rules[$ruleName] = $id;
             }
+
+            $output->writeln(sprintf('Rule `%s` is enabled', $ruleName));
         }
 
-        // Run each resource against the rule engine
+        $output->writeln('Verifying each resource');
         foreach ($resources as $resource) {
             $isValid = $ruleEngine->isValid($resource);
 

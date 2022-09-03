@@ -53,17 +53,23 @@ class SendReportCommand extends Command
         $output->writeln('<info>Sending report...</info>');
 
         $lastRun = $this->manager->getLastRuns(1);
+
+        if (!$lastRun) {
+            $output->writeln("<error>Could not find last Run, did you run it ?</error>");
+            return;
+        }
+
         list($run, $violationsByRule) = $this->manager->getRunDetails((int)$lastRun['id']);
 
         $header = $this->twig->render('report_header.twig');
         $body   = $this->twig->render('run_details.twig', ['run' => $run, 'violationsByRule' => $violationsByRule]);
 
-        $message = \Swift_Message::newInstance(sprintf('Majordome Report', $lastRun['id']))
-            ->setFrom([$this->fromAddress => 'Majordome'])
-            ->setTo($input->getArgument('emails'))
-            ->setBody($header . $body, 'text/html');
-
         try {
+            $message = \Swift_Message::newInstance(sprintf('Majordome Report', $lastRun['id']))
+                ->setFrom([$this->fromAddress => 'Majordome'])
+                ->setTo($input->getArgument('emails'))
+                ->setBody($header . $body, 'text/html');
+
             $this->mailer->send($message);
             $output->writeln('<info>Report sent</info>');
         } catch (\Swift_SwiftException $e) {
