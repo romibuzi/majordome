@@ -18,16 +18,7 @@ class WebApplicationTest extends TestCase
         // some part of the application will be bootstraped differently with env set at 'test'
         // see app/app.php for details
         putenv("ENV=test");
-
         $app = require dirname(__DIR__) . '/app/app.php';
-
-        $schema = file_get_contents(dirname(__DIR__) . '/var/schema.sql');
-        // split each CREATE TABLE queries and run them inside the test database
-        $queries = explode(';', $schema);
-        foreach ($queries as $query) {
-            $app['db']->exec($query);
-        }
-
         self::$app = $app;
     }
 

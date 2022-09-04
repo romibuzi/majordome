@@ -16,18 +16,16 @@ if (!file_exists(__DIR__ . '/config.php')) {
     throw new \LogicException('app/config.php.dist must be copied inside app/config.php and edited');
 }
 $config = require_once __DIR__ . '/config.php';
+
+if (empty($config['aws.region']) || empty($config['aws.accountId'])) {
+    throw new \LogicException('aws.region and aws.accountId must be set inside app/config.php');
+}
+
 $app = new Silex\Application($config);
 
 if ($env === 'test') {
     $app['debug'] = true;
 }
-
-$app->register(new Silex\Provider\DoctrineServiceProvider(), [
-    'db.options' => [
-        'driver'   => 'pdo_sqlite',
-        'path'     => 'test' === $env ? $config['db_test.path'] : $config['db.path'],
-    ],
-]);
 
 $app->register(new Silex\Provider\TwigServiceProvider(), [
     'twig.path' => $config['views.path'],
@@ -48,6 +46,27 @@ if ($app['debug'] && is_cli()) {
         $logger->pushHandler(new Monolog\Handler\StreamHandler(fopen('php://stdout', 'w')));
         return $logger;
     });
+}
+
+// DB config and setup
+$dbPath = 'test' === $env ? $config['db_test.path'] : $config['db.path'];
+
+$app->register(new Silex\Provider\DoctrineServiceProvider(), [
+    'db.options' => [
+        'driver'   => 'pdo_sqlite',
+        'path'     => $dbPath,
+    ],
+]);
+
+if (!file_exists($dbPath)) {
+    $app['logger']->info("'$dbPath' doesnt exist, creating it with schema." . PHP_EOL);
+
+    $schema = file_get_contents(__DIR__ . '/schema.sql');
+    // split each CREATE TABLE queries and run them inside the database
+    $queries = explode(';', $schema);
+    foreach ($queries as $query) {
+        $app['db']->exec($query);
+    }
 }
 
 // AWS Configuration

@@ -29,10 +29,10 @@ return [
     |--------------------------------------------------------------------------
     */
     // The AWS region where you want Majordome work (us-east-1, eu-west-1, us-west-2, ...)
-    'aws.region' => '',
+    'aws.region' => 'eu-west-1',
 
     // The AWS Account Id you want to analyze
-    'aws.accountId' => '',
+    'aws.accountId' => 'XXX',
 
     // The Rules you want to apply
     'aws.rules' => [
