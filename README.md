@@ -21,6 +21,8 @@ This is an overview of what Majordome can detect with existing rules:
 - Detect a Unused [Security Group](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html)
 - Detect a LoadBalancer without EC2 instances attached behind it
 
+---
+
 <details open="open">
 <summary>Table of Contents</summary>
 
