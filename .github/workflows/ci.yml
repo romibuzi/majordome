@@ -31,5 +31,5 @@ jobs:
     - name: Install dependencies
       run: make install-dev
 
-    - name: Run test suite
+    - name: Run tests suite
       run: make test
