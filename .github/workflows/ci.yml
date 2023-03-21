@@ -1,0 +1,35 @@
+name: PHP Composer
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup PHP environment
+      uses: nanasess/setup-php@v3.3.2
+      with:
+        php-version: 7.4
+    
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+      
+    - name: Copy example config
+      run: cp app/config.php.dist app/config.php
+
+    - name: Install dependencies
+      run: make install-dev
+
+    - name: Run test suite
+      run: make test
