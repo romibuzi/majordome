@@ -100,13 +100,13 @@ Check the [aws doc](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-polic
 - [Composer](https://getcomposer.org/)
 
 ```
-$ make install
+make install
 ```
 
 #### Run
 
 ```
-$ make run
+make run
 ```
 
 This will run the Majordome process, which will crawl different AWS resources and run each of them against the rule engine to decide if the resource is valid or not.
@@ -116,7 +116,7 @@ Majordome will save the run and its `violations` (a violation is when a resource
 #### Run the web interface
 
 ```
-$ make run-web
+make run-web
 ```
 
 The interface will be available at [http://localhost:8080](http://localhost:8080). It will display the list of Majordome runs and display details and associated violations for each of them.
@@ -126,26 +126,26 @@ The interface will be available at [http://localhost:8080](http://localhost:8080
 First build the majordome docker image:
 
 ```
-$ make docker-build
+make docker-build
 ```
 
 Then you are able to launch the majordome process:
 
 ```
-$ make docker-run
+make docker-run
 ```
 
 Finally launch the web interface that will be accessible at [http://localhost:8080](http://localhost:8080):
 
 ```
-$ make docker-run-web
+make docker-run-web
 ```
 
 ## Tests
 
 ```
-$ make install-dev
-$ make test
+make install-dev
+make test
 ```
 
 ## FAQ
