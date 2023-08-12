@@ -95,7 +95,7 @@ Check the [aws doc](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-polic
 
 #### Prerequisites
 
-- PHP 7+ with curl and sqlite3 extensions
+- PHP >=7.4 with curl and sqlite3 extensions
 - Sqlite3
 - [Composer](https://getcomposer.org/)
 
