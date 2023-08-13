@@ -1,8 +1,6 @@
 Majordome
 ========
 
-[![Build Status](https://app.travis-ci.com/romibuzi/majordome.svg?branch=master)](https://app.travis-ci.com/romibuzi/majordome)
-
 Majordome is both a command line tool and a web interface looking for unused resources on your AWS cloud based on a set of defined rules.
 
 <p align="center">
