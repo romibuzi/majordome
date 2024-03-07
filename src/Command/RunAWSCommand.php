@@ -10,7 +10,7 @@ use Majordome\Rule\AWS\UnusedAMI;
 use Majordome\Rule\AWS\UnusedElasticIP;
 use Majordome\Rule\AWS\UnusedSecurityGroup;
 use Majordome\Rule\AWS\UnusedSnapchot;
-use Majordome\Rule\BasicRuleEngine;
+use Majordome\Rule\SequentialRuleEngine;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -91,7 +91,7 @@ class RunAWSCommand extends Command
             $awsCrawler->getELBResources()
         );
 
-        $ruleEngine = new BasicRuleEngine();
+        $ruleEngine = new SequentialRuleEngine();
         $rulesConfig = $this->application['aws.rules'];
 
         if ($rulesConfig['DetachedEBS']) {

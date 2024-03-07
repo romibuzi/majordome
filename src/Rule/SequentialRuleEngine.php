@@ -4,7 +4,7 @@ namespace Majordome\Rule;
 
 use Majordome\Resource\ResourceInterface;
 
-class BasicRuleEngine implements RuleEngineInterface
+class SequentialRuleEngine implements RuleEngineInterface
 {
     /** @var RuleInterface[] */
     private $rules = [];
