@@ -23,7 +23,7 @@
     "twig/twig": "2.15.*",
     "symfony/twig-bridge": "4.4.*",
     "monolog/monolog": "2.9.*",
-    "swiftmailer/swiftmailer": "5.4.*",
+    "swiftmailer/swiftmailer": "6.2.*",
     "aws/aws-sdk-php": "3.300.*"
   },
   "require-dev": {
