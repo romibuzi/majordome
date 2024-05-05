@@ -3,8 +3,10 @@
 namespace Majordome\Tests\Resource;
 
 use Majordome\Resource\AWSResourceType;
-use Majordome\Resource\AWSResourceUrlGenerator;
-use Majordome\Resource\ResourceUrlGeneratorInterface;
+use Majordome\Resource\DefaultResource;
+use Majordome\Resource\Url\AWSResourceUrlGenerator;
+use Majordome\Resource\Url\ResourceUrlGenerator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -12,47 +14,30 @@ class AWSResourceUrlGeneratorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var ResourceUrlGeneratorInterface */
-    private $generator;
+    private ResourceUrlGenerator $generator;
 
-    private static $awsRegion = 'us-east-1';
+    private static string $awsRegion = 'us-east-1';
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         $this->generator = new AWSResourceUrlGenerator(self::$awsRegion);
     }
 
-    /**
-     * @dataProvider resourcesProvider
-     *
-     * @param string $id
-     * @param string $type
-     */
-    public function testGenerateResourceUrl($id, $type)
+    #[DataProvider('resourcesProvider')]
+    public function testGenerateResourceUrl(string $id, AWSResourceType $type)
     {
-        $resource = $this->prophesize();
-        $resource->willImplement('Majordome\Resource\ResourceInterface');
+        $resource = new DefaultResource($id, $type->value, []);
 
-        $resource->getId()->willReturn($id);
-        $resource->getType()->willReturn($type)->shouldBeCalled();
-
-        $result = $this->generator->generateUrl($resource->reveal());
+        $result = $this->generator->generateUrl($resource);
 
         $this->assertIsString($result);
         $this->assertStringContainsString(AWSResourceUrlGenerator::WEB_CONSOLE_URL, $result);
 
-        if ($type !== 'unknown') {
-            $this->assertStringContainsString(self::$awsRegion, $result);
-            $this->assertStringContainsString($id, $result);
-
-            $resource->getId()->shouldHaveBeenCalled();
-        }
+        $this->assertStringContainsString(self::$awsRegion, $result);
+        $this->assertStringContainsString($resource->getId(), $result);
     }
 
-    public function resourcesProvider()
+    public static function resourcesProvider(): array
     {
         return [
             ['i-AAAAAAAA', AWSResourceType::EC2],
@@ -61,8 +46,7 @@ class AWSResourceUrlGeneratorTest extends TestCase
             ['sg-CCCCCCCC', AWSResourceType::SG],
             ['XXXXXXXXXXX', AWSResourceType::ELB],
             ['iam.ec2.ami1', AWSResourceType::AMI],
-            ['snap-DDDDDDD', AWSResourceType::SNAPSHOT],
-            ['unknown', 'unknown'],
+            ['snap-DDDDDDD', AWSResourceType::SNAPSHOT]
         ];
     }
 }

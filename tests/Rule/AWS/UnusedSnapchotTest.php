@@ -2,42 +2,38 @@
 
 namespace Majordome\Tests\Rule\AWS;
 
-use Majordome\Rule\AWS\UnusedSnapchot;
-use Majordome\Tests\Rule\AbstractRuleTest;
+use Majordome\Rule\AWS\UnusedSnapshot;
+use Majordome\Rule\Rule;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class UnusedSnapchotTest extends AbstractRuleTest
+class UnusedSnapchotTest extends TestCase
 {
     use ProphecyTrait;
 
-    private static $ebsVolumes = [
+    private Rule $rule;
+
+    private static array $ebsVolumes = [
         'vol-AAAAAAAAAA',
         'vol-BBBBBBBBBB',
         'vol-CCCCCCCCCC',
     ];
 
-    private static $AMIs = [
+    private static array $AMIs = [
         'ami-EEEEEEEE',
     ];
 
-    /**
-     * {@inheritDoc}
-     */
     public function setUp(): void
     {
-        $this->rule = new UnusedSnapchot(self::$ebsVolumes, self::$AMIs);
+        $this->rule = new UnusedSnapshot(self::$ebsVolumes, self::$AMIs);
     }
 
-    /**
-     * @dataProvider snapshotResourcesProvider
-     *
-     * @param bool  $expected
-     * @param array $data
-     */
-    public function testRule($expected, array $data)
+    #[DataProvider('snapshotResourcesProvider')]
+    public function testRule(bool $expected, array $data)
     {
         $resource = $this->prophesize();
-        $resource->willImplement('Majordome\Resource\ResourceInterface');
+        $resource->willImplement('Majordome\Resource\Resource');
         $resource->getData()->willReturn($data)->shouldBeCalled();
 
         $result = $this->rule->isValid($resource->reveal());
@@ -45,7 +41,7 @@ class UnusedSnapchotTest extends AbstractRuleTest
         $this->assertSame($expected, $result);
     }
 
-    public function snapshotResourcesProvider()
+    public static function snapshotResourcesProvider(): array
     {
         return [
             'Snapshot of an existing Volume' => [

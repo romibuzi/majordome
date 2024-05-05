@@ -1,0 +1,4 @@
+aws:
+    version: latest
+    region: "%env(AWS_REGION)%"
+    endpoint: "http://0.0.0.0:4566"

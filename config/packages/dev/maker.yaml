@@ -1,0 +1,4 @@
+maker:
+  # tell MakerBundle that classes live in
+  # Majordome namespace, instead of the default App
+  root_namespace: 'Majordome'

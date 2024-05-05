@@ -2,19 +2,19 @@
 
 namespace Majordome\Rule\AWS;
 
-use Majordome\Resource\ResourceInterface;
-use Majordome\Rule\RuleInterface;
+use Majordome\Resource\Resource;
+use Majordome\Rule\Rule;
 
-class ELBWithoutInstances implements RuleInterface
+class ELBWithoutInstances implements Rule
 {
     /**
      * {@inheritDoc}
      */
-    public function isValid(ResourceInterface $resource)
+    public function isValid(Resource $resource): bool
     {
         $data = $resource->getData();
 
-        // this rule is only runned for ELB resources
+        // this rule runs only for ELB resources
         if (!array_key_exists('LoadBalancerName', $data)) {
             return true;
         }
@@ -29,7 +29,7 @@ class ELBWithoutInstances implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public static function getName(): string
     {
         return 'ELBWithoutInstances';
     }
@@ -37,7 +37,7 @@ class ELBWithoutInstances implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function getDescription()
+    public static function getDescription(): string
     {
         return 'Consider as invalid a ELB with 0 instance attached behind it';
     }

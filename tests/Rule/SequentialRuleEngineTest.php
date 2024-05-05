@@ -13,10 +13,10 @@ class SequentialRuleEngineTest extends TestCase
     public function testAddRules()
     {
         $rule1 = $this->prophesize();
-        $rule1->willImplement('Majordome\Rule\RuleInterface');
+        $rule1->willImplement('Majordome\Rule\Rule');
 
         $rule2 = $this->prophesize();
-        $rule2->willImplement('Majordome\Rule\RuleInterface');
+        $rule2->willImplement('Majordome\Rule\Rule');
 
         $sequentialRuleEngine = new SequentialRuleEngine();
         $sequentialRuleEngine->addRule($rule1->reveal());
@@ -29,20 +29,20 @@ class SequentialRuleEngineTest extends TestCase
         $this->assertContains($rule2->reveal(), $rules);
 
         foreach ($rules as $rule) {
-            $this->assertInstanceOf('Majordome\Rule\RuleInterface', $rule);
+            $this->assertInstanceOf('Majordome\Rule\Rule', $rule);
         }
     }
 
     public function testIsValid()
     {
         $resource = $this->prophesize();
-        $resource->willImplement('Majordome\Resource\ResourceInterface');
+        $resource->willImplement('Majordome\Resource\Resource');
 
         $rule1 = $this->prophesize();
-        $rule1->willImplement('Majordome\Rule\RuleInterface');
+        $rule1->willImplement('Majordome\Rule\Rule');
 
         $rule2 = $this->prophesize();
-        $rule2->willImplement('Majordome\Rule\RuleInterface');
+        $rule2->willImplement('Majordome\Rule\Rule');
 
         // both rules will indicates that the given resource is valid
         $rule1->isValid($resource->reveal())->willReturn(true)->shouldBeCalled();
@@ -59,13 +59,13 @@ class SequentialRuleEngineTest extends TestCase
     public function testIsInvalid()
     {
         $resource = $this->prophesize();
-        $resource->willImplement('Majordome\Resource\ResourceInterface');
+        $resource->willImplement('Majordome\Resource\Resource');
 
         $rule1 = $this->prophesize();
-        $rule1->willImplement('Majordome\Rule\RuleInterface');
+        $rule1->willImplement('Majordome\Rule\Rule');
 
         $rule2 = $this->prophesize();
-        $rule2->willImplement('Majordome\Rule\RuleInterface');
+        $rule2->willImplement('Majordome\Rule\Rule');
 
         // rule1 will indicates that the given resource is invalid
         $rule1->isValid($resource->reveal())->willReturn(false)->shouldBeCalled();

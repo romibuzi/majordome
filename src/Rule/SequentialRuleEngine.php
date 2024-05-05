@@ -2,20 +2,20 @@
 
 namespace Majordome\Rule;
 
-use Majordome\Resource\ResourceInterface;
+use Majordome\Resource\Resource;
 
-class SequentialRuleEngine implements RuleEngineInterface
+class SequentialRuleEngine implements RuleEngine
 {
-    /** @var RuleInterface[] */
-    private $rules = [];
+    /** @var Rule[] */
+    private array $rules = [];
 
-    /** @var RuleInterface|null */
-    private $invalidatedRule = null;
+    /** @var Rule|null */
+    private ?Rule $invalidatedRule = null;
 
     /**
      * {@inheritDoc}
      */
-    public function addRule(RuleInterface $rule)
+    public function addRule(Rule $rule): void
     {
         $this->rules[] = $rule;
     }
@@ -23,7 +23,17 @@ class SequentialRuleEngine implements RuleEngineInterface
     /**
      * {@inheritDoc}
      */
-    public function getRules()
+    public function addRules(array $rules): void
+    {
+        foreach ($rules as $rule) {
+            $this->addRule($rule);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRules(): array
     {
         return $this->rules;
     }
@@ -31,7 +41,7 @@ class SequentialRuleEngine implements RuleEngineInterface
     /**
      * {@inheritDoc}
      */
-    public function getInvalidatedRule()
+    public function getInvalidatedRule(): ?Rule
     {
         return $this->invalidatedRule;
     }
@@ -39,20 +49,17 @@ class SequentialRuleEngine implements RuleEngineInterface
     /**
      * {@inheritDoc}
      */
-    public function isValid(ResourceInterface $resource)
+    public function isValid(Resource $resource): bool
     {
-        $valid = true;
         $this->invalidatedRule = null;
 
         foreach ($this->rules as $rule) {
             if (!$rule->isValid($resource)) {
-                $valid = false;
                 $this->invalidatedRule = $rule;
-
-                break;
+                return false;
             }
         }
 
-        return $valid;
+        return true;
     }
 }

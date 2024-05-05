@@ -2,13 +2,13 @@
 
 namespace Majordome\Resource;
 
-final class AWSResourceType
+enum AWSResourceType: string
 {
-    const AMI       = 'ami';
-    const EBS       = 'ebs';
-    const EC2       = 'ec2';
-    const EIP       = 'elastic-ip';
-    const ELB       = 'elb';
-    const SG        = 'security-group';
-    const SNAPSHOT  = 'snapshot';
+    case AMI = 'ami';
+    case EBS = 'ebs';
+    case EC2 = 'ec2';
+    case EIP = 'elastic-ip';
+    case ELB = 'elb';
+    case SG = 'security-group';
+    case SNAPSHOT = 'snapshot';
 }

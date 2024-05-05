@@ -2,56 +2,11 @@
 
 namespace Majordome\Resource;
 
-class Resource implements ResourceInterface
+interface Resource
 {
-    /**
-     * @var string
-     */
-    private $id;
+    public function getId(): string;
 
-    /**
-     * @var string
-     */
-    private $type;
+    public function getType(): string;
 
-    /**
-     * @var array
-     */
-    private $data;
-
-    /**
-     * @param string $id
-     * @param string $type
-     * @param array  $data
-     */
-    public function __construct($id, $type, array $data = [])
-    {
-        $this->id   = $id;
-        $this->type = $type;
-        $this->data = $data;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
+    public function getData(): array;
 }

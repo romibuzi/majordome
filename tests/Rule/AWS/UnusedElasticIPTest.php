@@ -3,31 +3,27 @@
 namespace Majordome\Tests\Rule\AWS;
 
 use Majordome\Rule\AWS\UnusedElasticIP;
-use Majordome\Tests\Rule\AbstractRuleTest;
+use Majordome\Rule\Rule;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class UnusedElasticIPTest extends AbstractRuleTest
+class UnusedElasticIPTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * {@inheritDoc}
-     */
+    private Rule $rule;
+
     public function setUp(): void
     {
         $this->rule = new UnusedElasticIP();
     }
 
-    /**
-     * @dataProvider elasticIpResourcesProvider
-     *
-     * @param bool  $expected
-     * @param array $data
-     */
-    public function testRule($expected, array $data)
+    #[DataProvider('elasticIpResourcesProvider')]
+    public function testRule(bool $expected, array $data)
     {
         $resource = $this->prophesize();
-        $resource->willImplement('Majordome\Resource\ResourceInterface');
+        $resource->willImplement('Majordome\Resource\Resource');
         $resource->getData()->willReturn($data)->shouldBeCalled();
 
         $result = $this->rule->isValid($resource->reveal());
@@ -35,7 +31,7 @@ class UnusedElasticIPTest extends AbstractRuleTest
         $this->assertSame($expected, $result);
     }
 
-    public function elasticIpResourcesProvider()
+    public static function elasticIpResourcesProvider(): array
     {
         return [
             'elasticIp attached to an EC2 instance' => [
