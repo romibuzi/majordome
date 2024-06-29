@@ -2,48 +2,65 @@
 
 namespace Majordome\Controller;
 
-use Majordome\Manager\RunManager;
-use Psr\Log\LoggerInterface;
+use Majordome\Entity\Violation;
+use Majordome\Repository\RunRepository;
+use Majordome\Repository\ViolationRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 
-class DefaultController
+class DefaultController extends AbstractController
 {
-    private $manager;
-    private $twig;
-    private $logger;
+    private RunRepository $runRepository;
+    private ViolationRepository $violationRepository;
 
-    public function __construct(RunManager $manager, \Twig_Environment $twig, LoggerInterface $logger = null)
+    public function __construct(RunRepository $runRepository, ViolationRepository $violationRepository)
     {
-        $this->manager    = $manager;
-        $this->twig       = $twig;
-        $this->logger     = $logger;
+        $this->runRepository = $runRepository;
+        $this->violationRepository = $violationRepository;
+    }
+
+    #[Route('/', name: 'index')]
+    public function index(): Response
+    {
+        $runs = $this->runRepository->findLastRuns(10);
+
+        return $this->render('index.html.twig', ['runs' => $runs]);
     }
 
     /**
-     * Main Action, list all differents Majordome runs
-     *
-     * @return string : the template
+     * @param Violation[] $violations
+     * @return array
      */
-    public function indexAction()
+    private function groupViolationsByRule(array $violations): array
     {
-        $runs = $this->manager->getLastRuns(10);
-
-        return $this->twig->render('index.twig', ['runs' => $runs]);
+        return array_reduce($violations, function (array $result, Violation $violation) {
+            $rule = $violation->getRule();
+            if (!array_key_exists($rule->getId(), $result)) {
+                $result[$rule->getId()] = [
+                    'rule' => $rule,
+                    'violations' => []
+                ];
+            }
+            $result[$rule->getId()]['violations'][] = $violation;
+            return $result;
+        }, []);
     }
 
-    /**
-     * @param string $id
-     *
-     * @return string : the template
-     */
-    public function runDetailsAction($id)
+    #[Route('/run/{id}', name: 'run_details')]
+    public function runDetails(int $id): Response
     {
-        list($run, $violationsByRule) = $this->manager->getRunDetails((int)$id);
-
+        $run = $this->runRepository->find($id);
         if (!$run) {
-            throw new NotFoundHttpException(sprintf("run %s wasn't found", $id));
+            throw new NotFoundHttpException(sprintf("run %s not found", $id));
         }
 
-        return $this->twig->render('run.twig', ['run' => $run, 'violationsByRule' => $violationsByRule]);
+        $violations = $this->violationRepository->findByRun($run);
+        $violationsByRule = $this->groupViolationsByRule($violations);
+
+        return $this->render('run.html.twig', ['run' => $run, 'violationsByRules' => $violationsByRule]);
     }
 }
+
+;

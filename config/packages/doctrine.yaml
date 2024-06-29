@@ -1,0 +1,30 @@
+doctrine:
+  dbal:
+    url: 'sqlite:///%kernel.project_dir%/var/majordome.db'
+    profiling_collect_backtrace: '%kernel.debug%'
+  orm:
+    auto_generate_proxy_classes: true
+    enable_lazy_ghost_objects: true
+    validate_xml_mapping: true
+    naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+    auto_mapping: true
+    report_fields_where_declared: true
+    controller_resolver:
+      auto_mapping: true
+    mappings:
+      Majordome:
+        type: attribute
+        is_bundle: false
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: 'Majordome\Entity'
+        alias: Majordome
+
+when@dev:
+  doctrine:
+    dbal:
+      url: 'sqlite:///%kernel.project_dir%/var/majordome_dev.db'
+
+when@test:
+  doctrine:
+    dbal:
+      url: 'sqlite:///%kernel.project_dir%/var/majordome_test.db'

@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- http://phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit
-        backupGlobals               = "false"
-        backupStaticAttributes      = "false"
-        colors                      = "true"
-        convertErrorsToExceptions   = "true"
-        convertNoticesToExceptions  = "true"
-        convertWarningsToExceptions = "true"
-        processIsolation            = "false"
-        stopOnFailure               = "false"
-        cacheResult                 = "false"
-        bootstrap                   = "tests/bootstrap.php" >
+    backupGlobals="false" 
+    colors="true" 
+    processIsolation="false" 
+    stopOnFailure="false" 
+    cacheResult="false" 
+    bootstrap="tests/bootstrap.php" 
+    cacheDirectory=".phpunit.cache" 
+    backupStaticProperties="false">
 
-    <testsuites>
-        <testsuite name="MajordomeTestSuite">
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
+  <php>
+    <ini name="error_reporting" value="-1" />
+    <server name="APP_ENV" value="test" force="true" />
+    <server name="APP_DEBUG" value="false" />
+    <server name="KERNEL_CLASS" value="Majordome\Kernel" />
+  </php>
 
-    <coverage>
-        <report>
-            <html outputDirectory="./var/code-coverage" lowUpperBound="50" highLowerBound="80"/>
-        </report>
-    </coverage>
+  <testsuites>
+    <testsuite name="MajordomeTestSuite">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

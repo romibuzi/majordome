@@ -3,31 +3,27 @@
 namespace Majordome\Tests\Rule\AWS;
 
 use Majordome\Rule\AWS\ELBWithoutInstances;
-use Majordome\Tests\Rule\AbstractRuleTest;
+use Majordome\Rule\Rule;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class ELBWithoutInstancesTest extends AbstractRuleTest
+class ELBWithoutInstancesTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * {@inheritDoc}
-     */
+    private Rule $rule;
+
     public function setUp(): void
     {
         $this->rule = new ELBWithoutInstances();
     }
 
-    /**
-     * @dataProvider elasticLoadBalancerResourcesProvider
-     *
-     * @param bool  $expected
-     * @param array $data
-     */
-    public function testRule($expected, array $data)
+    #[DataProvider('elasticLoadBalancerResourcesProvider')]
+    public function testRule(bool $expected, array $data)
     {
         $resource = $this->prophesize();
-        $resource->willImplement('Majordome\Resource\ResourceInterface');
+        $resource->willImplement('Majordome\Resource\Resource');
         $resource->getData()->willReturn($data)->shouldBeCalled();
 
         $result = $this->rule->isValid($resource->reveal());
@@ -35,7 +31,7 @@ class ELBWithoutInstancesTest extends AbstractRuleTest
         $this->assertSame($expected, $result);
     }
 
-    public function elasticLoadBalancerResourcesProvider()
+    public static function elasticLoadBalancerResourcesProvider(): array
     {
         return [
             'ELB with mutliples instances attached to it' => [

@@ -1,0 +1,42 @@
+<a class="btn btn-primary btn-sm mb-2"
+   href="{{ path('index') }}">
+    Back to list of runs
+</a>
+
+<div class="d-flex justify-content-between">
+    <div class="h2"><h2>Run {{ run.id }}</h2></div>
+    <div class="p-2"><p class="bg-dark text-light">{{ run.createdAt|date("j/m/Y, H:i \T") }}</p></div>
+</div>
+
+{% if violationsByRules|length > 0 %}
+    <h4>Violations by rule</h4>
+    <table class="table table-bordered">
+        <tbody>
+        {% for violationsByRule in violationsByRules %}
+            {% set violationCount = violationsByRule.violations|length %}
+            {% set pluralize = violationCount > 1 ? "violations": "violation" %}
+            <tr data-href="#{{ violationsByRule.rule.name }}">
+                <td>{{ violationsByRule.rule.name }} ({{ violationCount }} {{ pluralize }})</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <h4>No violations detected</h4>
+{% endif %}
+
+<hr>
+
+{% for violationsByRule in violationsByRules %}
+    <div id="{{ violationsByRule.rule.name }}" class="rules">
+        <h4>{{ violationsByRule.rule.name }}</h4>
+
+        <table class="table">
+            <tbody>
+            {% for violation in violationsByRule.violations %}
+                <tr><td class="card"><a class="stretched-link" href="{{ generate_resource_url(run, violation.resource) }}" target="_blank">{{ violation.resourceId }}</a></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endfor %}

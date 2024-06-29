@@ -2,22 +2,22 @@
 
 namespace Majordome\Rule\AWS;
 
-use Majordome\Resource\ResourceInterface;
-use Majordome\Rule\RuleInterface;
+use Majordome\Resource\Resource;
+use Majordome\Rule\Rule;
 
-class DetachedEBSVolume implements RuleInterface
+class DetachedEBSVolume implements Rule
 {
     /** State when the volume isn't attached to any EC2 instance */
-    const AVAILABLE_VOLUME = 'available';
+    final const AVAILABLE_VOLUME = 'available';
 
     /**
      * {@inheritDoc}
      */
-    public function isValid(ResourceInterface $resource)
+    public function isValid(Resource $resource): bool
     {
         $data = $resource->getData();
 
-        // this rule is only runned for EBS Volume resources
+        // this rule runs only for EBS Volume resources
         if (!array_key_exists('VolumeId', $data)) {
             return true;
         }
@@ -32,7 +32,7 @@ class DetachedEBSVolume implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public static function getName(): string
     {
         return 'DetachedEBSVolume';
     }
@@ -40,7 +40,7 @@ class DetachedEBSVolume implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function getDescription()
+    public static function getDescription(): string
     {
         return 'Consider as invalid a EBS Volume not attached to any EC2 instance';
     }

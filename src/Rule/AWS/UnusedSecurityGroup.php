@@ -2,15 +2,12 @@
 
 namespace Majordome\Rule\AWS;
 
-use Majordome\Resource\ResourceInterface;
-use Majordome\Rule\RuleInterface;
+use Majordome\Resource\Resource;
+use Majordome\Rule\Rule;
 
-class UnusedSecurityGroup implements RuleInterface
+class UnusedSecurityGroup implements Rule
 {
-    /**
-     * @var array
-     */
-    private static $securityGroupsIds;
+    private static array $securityGroupsIds;
 
     /**
      * @param string[] $securityGroups
@@ -23,11 +20,11 @@ class UnusedSecurityGroup implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function isValid(ResourceInterface $resource)
+    public function isValid(Resource $resource): bool
     {
         $data = $resource->getData();
 
-        // this rule is only runned for Security Group resources
+        // this rule runs only for Security Group resources
         if (!array_key_exists('GroupId', $data)) {
             return true;
         }
@@ -42,7 +39,7 @@ class UnusedSecurityGroup implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public static function getName(): string
     {
         return 'UnusedSecurityGroup';
     }
@@ -50,7 +47,7 @@ class UnusedSecurityGroup implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function getDescription()
+    public static function getDescription(): string
     {
         $desc = 'Consider as invalid a Security Group that is unused by any other AWS resource '.
         'that makes usage of it (ELB, EC2, RDS, ElastiCache)';

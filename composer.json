@@ -1,52 +1,98 @@
 {
-  "name": "romibuzi/majordome",
-  "type": "project",
-  "description": "A tool scanning your AWS cloud looking for unused resources to clean up",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Romain Ardiet",
-      "email": "romain.ardiet@gmail.com"
+    "name": "romibuzi/majordome",
+    "license": "MIT",
+    "type": "project",
+    "description": "A tool scanning your AWS cloud looking for unused resources to clean up",
+    "authors": [
+        {
+            "name": "Romain Ardiet",
+            "email": "contact@romainardiet.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2",
+        "ext-ctype": "*",
+        "ext-curl": "*",
+        "ext-iconv": "*",
+        "ext-pdo": "*",
+        "ext-sqlite3": "*",
+        "aws/aws-sdk-php-symfony": "^2.7",
+        "doctrine/annotations": "^2.0",
+        "doctrine/dbal": "^3.8",
+        "doctrine/doctrine-bundle": "^2.12",
+        "doctrine/doctrine-migrations-bundle": "^3.3",
+        "doctrine/orm": "^3.1",
+        "symfony/asset": "^7.1",
+        "symfony/asset-mapper": "^7.1",
+        "symfony/console": "^7.1",
+        "symfony/dotenv": "^7.1",
+        "symfony/flex": "^2",
+        "symfony/framework-bundle": "^7.1",
+        "symfony/runtime": "^7.1",
+        "symfony/string": "^7.1",
+        "symfony/twig-bundle": "^7.1",
+        "symfony/yaml": "^7.1",
+        "twig/extra-bundle": "^3.3"
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.5",
+        "phpspec/prophecy-phpunit": "^2.2",
+        "phpunit/phpunit": "^11.0",
+        "squizlabs/php_codesniffer": "^3.9",
+        "symfony/browser-kit": "^7.1",
+        "symfony/css-selector": "^7.1",
+        "symfony/maker-bundle": "^1.43",
+        "symfony/web-profiler-bundle": "^7.1"
+    },
+    "config": {
+        "bin-dir": "bin/",
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "php-http/discovery": true,
+            "symfony/flex": true,
+            "symfony/runtime": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Majordome\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Majordome\\Tests\\": "tests/"
+        }
+    },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "7.1.*"
+        }
     }
-  ],
-  "require": {
-    "php": ">=7.4",
-    "ext-curl": "*",
-    "ext-pdo": "*",
-    "ext-sqlite3": "*",
-
-    "silex/silex": "2.3.*",
-    "symfony/debug": "4.4.*",
-    "symfony/console": "4.4.*",
-    "symfony/service-contracts": "2.5.*",
-    "doctrine/dbal": "3.8.*",
-    "twig/twig": "2.15.*",
-    "symfony/twig-bridge": "4.4.*",
-    "monolog/monolog": "2.9.*",
-    "swiftmailer/swiftmailer": "5.4.*",
-    "aws/aws-sdk-php": "3.300.*"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "9.6.*",
-    "phpspec/prophecy-phpunit": "2.1.*",
-    "symfony/browser-kit": "4.4.*",
-    "symfony/dom-crawler": "4.4.*",
-    "squizlabs/php_codesniffer": "3.9.*"
-  },
-  "config": {
-    "bin-dir": "bin/",
-    "platform": {
-      "php": "7.4.33"
-    }
-  },
-  "autoload": {
-    "psr-4": {
-      "Majordome\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Majordome\\Tests\\": "tests/"
-    }
-  }
 }

@@ -3,37 +3,33 @@
 namespace Majordome\Tests\Rule\AWS;
 
 use Majordome\Rule\AWS\UnusedAMI;
-use Majordome\Tests\Rule\AbstractRuleTest;
+use Majordome\Rule\Rule;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class UnusedAMITest extends AbstractRuleTest
+class UnusedAMITest extends TestCase
 {
     use ProphecyTrait;
 
-    private static $ec2AMIs = [
+    private Rule $rule;
+
+    private static array $ec2AMIs = [
         'iam.ec2.ami1',
         'iam.ec2.ami2',
         'iam.ec2.ami3',
     ];
 
-    /**
-     * {@inheritDoc}
-     */
     public function setUp(): void
     {
         $this->rule = new UnusedAMI(self::$ec2AMIs);
     }
 
-    /**
-     * @dataProvider AMIResourcesProvider
-     *
-     * @param bool  $expected
-     * @param array $data
-     */
-    public function testRule($expected, array $data)
+    #[DataProvider('AMIResourcesProvider')]
+    public function testRule(bool $expected, array $data)
     {
         $resource = $this->prophesize();
-        $resource->willImplement('Majordome\Resource\ResourceInterface');
+        $resource->willImplement('Majordome\Resource\Resource');
         $resource->getData()->willReturn($data)->shouldBeCalled();
 
         $result = $this->rule->isValid($resource->reveal());
@@ -41,7 +37,7 @@ class UnusedAMITest extends AbstractRuleTest
         $this->assertSame($expected, $result);
     }
 
-    public function AMIResourcesProvider()
+    public static function AMIResourcesProvider(): array
     {
         return [
             'AMI used by a EC2 instance' => [

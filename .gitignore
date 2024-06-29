@@ -1,12 +1,21 @@
-bin/
-vendor/
+.env
 
-# local specific config
+# old local specific config
 app/config.php
 
-var/majordome.db
+###> symfony/framework-bundle ###
+bin/*
+!bin/console
 
-var/logs/*
-!var/logs/.gitkeep
+/var/
+/vendor/
+###< symfony/framework-bundle ###
 
-var/code-coverage
+###> phpunit/phpunit ###
+.phpunit.cache
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+###< squizlabs/php_codesniffer ###

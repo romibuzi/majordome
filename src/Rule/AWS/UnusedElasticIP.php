@@ -2,19 +2,19 @@
 
 namespace Majordome\Rule\AWS;
 
-use Majordome\Resource\ResourceInterface;
-use Majordome\Rule\RuleInterface;
+use Majordome\Resource\Resource;
+use Majordome\Rule\Rule;
 
-class UnusedElasticIP implements RuleInterface
+class UnusedElasticIP implements Rule
 {
     /**
      * {@inheritDoc}
      */
-    public function isValid(ResourceInterface $resource)
+    public function isValid(Resource $resource): bool
     {
         $data = $resource->getData();
 
-        // this rule is only runned for Elastic IP resources
+        // this rule runs only for Elastic IP resources
         if (!array_key_exists('PublicIp', $data)) {
             return true;
         }
@@ -31,7 +31,7 @@ class UnusedElasticIP implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public static function getName(): string
     {
         return 'UnusedElasticIP';
     }
@@ -39,7 +39,7 @@ class UnusedElasticIP implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function getDescription()
+    public static function getDescription(): string
     {
         return 'Consider as invalid a Elastic IP not attached to any EC2 instance or network interface';
     }

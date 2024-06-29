@@ -2,53 +2,60 @@
 
 namespace Majordome\Crawler;
 
-use Aws\Sdk;
+use Aws\Ec2\Ec2Client;
+use Aws\ElastiCache\ElastiCacheClient;
+use Aws\ElasticLoadBalancing\ElasticLoadBalancingClient;
+use Aws\Rds\RdsClient;
 use Majordome\Resource\AWSResourceType;
+use Majordome\Resource\DefaultResource;
 use Majordome\Resource\Resource;
-use Majordome\Resource\ResourceInterface;
 
 class AWSCrawler
 {
-    private $ec2Client;
-    private $elbClient;
-    private $rdsClient;
-    private $elasticacheClient;
+    private Ec2Client $ec2Client;
+    private ElasticLoadBalancingClient $elbClient;
+    private RdsClient $rdsClient;
+    private ElastiCacheClient $elastiCacheClient;
 
-    public function __construct(Sdk $awsSdk)
-    {
-        $this->ec2Client = $awsSdk->createEc2();
-        $this->elbClient = $awsSdk->createElasticLoadBalancing();
-        $this->rdsClient = $awsSdk->createRds();
-        $this->elasticacheClient = $awsSdk->createElastiCache();
+    public function __construct(
+        Ec2Client                  $ec2Client,
+        ElasticLoadBalancingClient $elbClient,
+        RdsClient                  $rdsClient,
+        ElastiCacheClient          $elastiCacheClient,
+    ) {
+        $this->ec2Client = $ec2Client;
+        $this->elbClient = $elbClient;
+        $this->rdsClient = $rdsClient;
+        $this->elastiCacheClient = $elastiCacheClient;
     }
 
     /**
      * @param string $ownerId
      *
-     * @return ResourceInterface[]
+     * @return Resource[]
      */
-    public function getAMIResources($ownerId)
+    public function getAMIResources(string $ownerId): array
     {
         $amiData = $this->ec2Client->describeImages(['Owners' => [$ownerId]])['Images'];
 
         return $this->buildResources('ImageId', AWSResourceType::AMI, $amiData);
     }
 
-    public function getEBSResources()
+    public function getEBSResources(): array
     {
         $ebsData = $this->ec2Client->describeVolumes()['Volumes'];
 
         return $this->buildResources('VolumeId', AWSResourceType::EBS, $ebsData);
     }
 
-    public function getElasticIpResources()
+    public function getElasticIpResources(): array
     {
         $elasticIPData = $this->ec2Client->describeAddresses()['Addresses'];
 
         return $this->buildResources('PublicIp', AWSResourceType::EIP, $elasticIPData);
     }
 
-    public function getELBResources()
+    public function getELBResources(): array
     {
         static $elbData = [];
 
@@ -59,7 +66,7 @@ class AWSCrawler
         return $this->buildResources('LoadBalancerName', AWSResourceType::ELB, $elbData);
     }
 
-    public function getSecurityGroupResources()
+    public function getSecurityGroupResources(): array
     {
         $sgData = $this->ec2Client->describeSecurityGroups()['SecurityGroups'];
 
@@ -69,9 +76,9 @@ class AWSCrawler
     /**
      * @param string $ownerId
      *
-     * @return ResourceInterface[]
+     * @return Resource[]
      */
-    public function getSnapshotResources($ownerId)
+    public function getSnapshotResources(string $ownerId): array
     {
         $snapshotsData = $this->ec2Client->describeSnapshots(['OwnerIds' => [$ownerId]])['Snapshots'];
 
@@ -81,7 +88,7 @@ class AWSCrawler
     /**
      * @return string[]
      */
-    public function listEC2AMIs()
+    public function listEC2AMIs(): array
     {
         $ec2AMIs = [];
         foreach ($this->listEC2Instances() as $instance) {
@@ -96,7 +103,7 @@ class AWSCrawler
     /**
      * @return string[]
      */
-    public function listEC2SecurityGroups()
+    public function listEC2SecurityGroups(): array
     {
         $ec2SecurityGroups = [];
 
@@ -114,27 +121,27 @@ class AWSCrawler
     /**
      * @return string[]
      */
-    public function listElasticacheSecurityGroups()
+    public function listElastiCacheSecurityGroups(): array
     {
-        $elasticacheSecurityGroups = [];
+        $elastiCacheSecurityGroups = [];
 
-        $elasticacheData = $this->elasticacheClient->describeCacheClusters();
+        $elastiCacheData = $this->elastiCacheClient->describeCacheClusters();
 
-        foreach ($elasticacheData['CacheClusters'] as $cacheCluster) {
+        foreach ($elastiCacheData['CacheClusters'] as $cacheCluster) {
             foreach ($cacheCluster['SecurityGroups'] as $securityGroup) {
-                if (!in_array($securityGroup['SecurityGroupId'], $elasticacheSecurityGroups)) {
-                    $elasticacheSecurityGroups[] = $securityGroup['SecurityGroupId'];
+                if (!in_array($securityGroup['SecurityGroupId'], $elastiCacheSecurityGroups)) {
+                    $elastiCacheSecurityGroups[] = $securityGroup['SecurityGroupId'];
                 }
             }
         }
 
-        return $elasticacheSecurityGroups;
+        return $elastiCacheSecurityGroups;
     }
 
     /**
      * @return string[]
      */
-    public function listELBSecurityGroups()
+    public function listELBSecurityGroups(): array
     {
         $elbSecurityGroups = [];
 
@@ -154,7 +161,7 @@ class AWSCrawler
     /**
      * @return string[]
      */
-    public function listRdsSecurityGroups()
+    public function listRdsSecurityGroups(): array
     {
         $rdsSecurityGroups = [];
 
@@ -173,17 +180,17 @@ class AWSCrawler
 
     /**
      * @param string $key
-     * @param string $type
-     * @param array  $data
+     * @param AWSResourceType $type
+     * @param array $data
      *
-     * @return ResourceInterface[]
+     * @return Resource[]
      */
-    private function buildResources($key, $type, array $data)
+    private function buildResources(string $key, AWSResourceType $type, array $data): array
     {
         $resources = [];
 
         foreach ($data as $item) {
-            $resources[] = new Resource($item[$key], $type, $item);
+            $resources[] = new DefaultResource($item[$key], $type->value, $item);
         }
 
         return $resources;
@@ -192,7 +199,7 @@ class AWSCrawler
     /**
      * @return \Generator
      */
-    private function listEC2Instances()
+    private function listEC2Instances(): \Generator
     {
         static $result = null;
 

@@ -2,6 +2,10 @@
 
 namespace Majordome\Tests\Crawler;
 
+use Aws\Ec2\Ec2Client;
+use Aws\ElastiCache\ElastiCacheClient;
+use Aws\ElasticLoadBalancing\ElasticLoadBalancingClient;
+use Aws\Rds\RdsClient;
 use Majordome\Crawler\AWSCrawler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -11,28 +15,20 @@ class AWSCrawlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var \Aws\Sdk|ObjectProphecy */
-    private $awsSdk;
-    /** @var \Aws\Ec2\Ec2Client|ObjectProphecy */
-    private $ec2Client;
+    private Ec2Client|ObjectProphecy $ec2Client;
+    private ElasticLoadBalancingClient|ObjectProphecy $elbClient;
+    private RdsClient|ObjectProphecy $rdsClient;
+    private ElastiCacheClient|ObjectProphecy $elastiCacheClient;
 
     /**
      * {@inheritDoc}
      */
     public function setUp(): void
     {
-        $this->awsSdk    = $this->prophesize('Aws\Sdk');
         $this->ec2Client = $this->prophesize('Aws\Ec2\Ec2Client');
-    }
-
-    public function testCrawlerWillInitializeAWSClients()
-    {
-        $this->awsSdk->createEc2()->shouldBeCalled();
-        $this->awsSdk->createElasticLoadBalancing()->shouldBeCalled();
-        $this->awsSdk->createRds()->shouldBeCalled();
-        $this->awsSdk->createElastiCache()->shouldBeCalled();
-
-        new AWSCrawler($this->awsSdk->reveal());
+        $this->elbClient = $this->prophesize('Aws\ElasticLoadBalancing\ElasticLoadBalancingClient');
+        $this->rdsClient = $this->prophesize('Aws\Rds\RdsClient');
+        $this->elastiCacheClient = $this->prophesize('Aws\ElastiCache\ElastiCacheClient');
     }
 
     public function testGetEBSResources()
@@ -60,21 +56,21 @@ class AWSCrawlerTest extends TestCase
            ]
         ];
         $this->ec2Client->describeVolumes()->WillReturn($data)->shouldBeCalled();
-        $this->awsSdk->createEc2()->WillReturn($this->ec2Client)->shouldBeCalled();
 
-        $this->awsSdk->createElasticLoadBalancing()->shouldBeCalled();
-        $this->awsSdk->createRds()->shouldBeCalled();
-        $this->awsSdk->createElastiCache()->shouldBeCalled();
-
-        $crawler   = new AWSCrawler($this->awsSdk->reveal());
+        $crawler = new AWSCrawler(
+            $this->ec2Client->reveal(),
+            $this->elbClient->reveal(),
+            $this->rdsClient->reveal(),
+            $this->elastiCacheClient->reveal()
+        );
         $resources = $crawler->getEBSResources();
 
         $this->assertSame(count($data['Volumes']), count($resources));
         foreach ($resources as $resource) {
             $this->assertInstanceOf(
-                'Majordome\Resource\ResourceInterface',
+                'Majordome\Resource\Resource',
                 $resource,
-                'AWSCrawler should return resources objects implementing ResourceInterface'
+                'AWSCrawler should return resources objects implementing Resource'
             );
             $this->assertContains($resource->getId(), [$volumeId1, $volumeId2]);
             $this->assertContains($resource->getData(), $data['Volumes']);
