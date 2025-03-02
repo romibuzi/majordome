@@ -10,6 +10,8 @@ AWS_SECRET_ARG=-e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)
 endif
 
 help:
+	@echo "    clean"
+	@echo "        Clean cache and vendor dependencies."
 	@echo "    install"
 	@echo "        Install dependencies via composer."
 	@echo "    install-dev"
@@ -26,6 +28,9 @@ help:
 	@echo "        Run Majordome process through docker."
 	@echo "    docker-run-web"
 	@echo "        Run Majordome web interface through docker."
+
+clean:
+	rm -rf var/cache var/log vendor
 
 install:
 	APP_ENV=prod composer install --no-dev
