@@ -22,7 +22,7 @@
         "doctrine/annotations": "^2.0",
         "doctrine/dbal": "^3.8",
         "doctrine/doctrine-bundle": "^2.12",
-        "doctrine/doctrine-migrations-bundle": "3.3.1",
+        "doctrine/doctrine-migrations-bundle": "3.3.*",
         "doctrine/orm": "^3.1",
         "symfony/asset": "^7.2",
         "symfony/asset-mapper": "^7.2",
