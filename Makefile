@@ -42,7 +42,7 @@ install-db:
 	php bin/console doctrine:database:create --no-interaction
 	php bin/console doctrine:migrations:migrate --no-interaction
 
-test:
+test: install-dev
 	bin/phpcs
 	bin/phpunit
 
