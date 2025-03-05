@@ -20,7 +20,7 @@
         "ext-sqlite3": "*",
         "aws/aws-sdk-php-symfony": "^2.7",
         "doctrine/annotations": "^2.0",
-        "doctrine/dbal": "^3.8",
+        "doctrine/dbal": "^4.2",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "3.4.*",
         "doctrine/orm": "^3.1",
